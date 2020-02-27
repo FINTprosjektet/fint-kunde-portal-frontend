@@ -131,6 +131,11 @@ class TechnicalList extends React.Component {
 
   render() {
     const { classes, technicalContacts } = this.props;
+    technicalContacts.sort(function(a,b){
+      if (a.firstName < b.firstName) return -1;
+      if (a.firstName > b.firstName) return 1;
+      return 0;
+    });
     return (
       <div className={classes.root}>
         <WarningMessageBox
