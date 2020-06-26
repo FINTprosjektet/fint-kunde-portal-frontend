@@ -21,6 +21,7 @@ import OrganisationApi from "../../../data/api/OrganisationApi";
 import WarningMessageBox from "../../../common/message-box/WarningMessageBox";
 import ContactView from "../view/ContactView";
 import { withContext } from "../../../data/context/withContext";
+import LegalContactConfirmationDialog from "../view/legal_contact_confirmation_dialog";
 
 const styles = theme => ({
   root: {
@@ -56,7 +57,8 @@ class TechnicalList extends React.Component {
       askToRemoveContact: false,
       showContact: false,
       contact: {},
-      message: ""
+      message: "",
+      legalDialog: false,
     };
   }
 
@@ -102,6 +104,18 @@ class TechnicalList extends React.Component {
       showContact: true
     });
   };
+  openLegalDialog = contact => {
+    this.setState({
+      contact: contact,
+      legalDialog: true,
+    })
+  };
+
+  closeLegalDialog = () => {
+    this.setState({
+      legalDialog: false,
+    })
+  };
 
   onCloseContactView = () => {
     this.setState({
@@ -131,6 +145,7 @@ class TechnicalList extends React.Component {
 
   render() {
     const { classes, technicalContacts } = this.props;
+
     return (
       <div className={classes.root}>
         <WarningMessageBox
@@ -143,6 +158,12 @@ class TechnicalList extends React.Component {
           onClose={this.onCloseContactView}
           show={this.state.showContact}
           notify={this.props.notify}
+        />
+        <LegalContactConfirmationDialog
+            openLegalDialog={this.state.legalDialog}
+            handleLegalDialogClose={this.closeLegalDialog}
+            contact={this.state.contact}
+            setLegalContact={this.setLegalContact}
         />
         <div className={classes.technicalContactList}>
           <Typography variant="h5" className={classes.title}>
@@ -170,7 +191,7 @@ class TechnicalList extends React.Component {
                   </IconButton>
                   <IconButton
                     aria-label="Legal"
-                    onClick={() => this.setLegalContact(contact)}
+                    onClick={() => this.openLegalDialog(contact)}
                   >
                     <SetLegalIcon className={classes.setLegalIcon} />
                   </IconButton>
